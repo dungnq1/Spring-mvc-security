@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+		
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="packagesToScan" value="com.dungsecurity.entity" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+		<property name="persistenceUnitName" value="persistenceUnit" />
+		<property name="jpaProperties">
+     	 	<props>
+		        <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+		        <prop key="jhibernate.show_sql">true</prop>
+		        <prop key="hibernate.format_sql">true</prop>
+     		</props>
+    </property>
+		<!-- <property name="jpaPropertyMap">
+			<util:map>
+				<entry key="hibernate.dialect" value="${hibernate.dialect}" />
+				<entry key="hibernate.show_sql" value="${hibernate.show_sql}" />
+				<entry key="hibernate.format_sql" value="${hibernate.format_sql}" />
+			</util:map>
+		</property> -->
+	</bean>
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	    <property name="driverClassName" value="org.postgresql.Driver"/>
+	    <property name="url" value="jdbc::postgresql://localhost:5432/postgres"/>
+	    <property name="username" value="postgres"/>
+	    <property name="password" value=""/>
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+</beans>
